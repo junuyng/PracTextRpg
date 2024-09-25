@@ -19,27 +19,17 @@ namespace TextRpg
     [System.Serializable]
     class Player
     {
-
         [JsonProperty] private PlayerType _type;
         [JsonProperty] private int _weaponStat = 0;
         [JsonProperty] private int _armorStat = 0;
         [JsonProperty] private float _attackPower;
         [JsonProperty] private float _defensePower;
-
-        private string job;
-        private int _level = 1;
-        private int maxHp = 100;
-        private float _hp;
-         private int _gold = 0;
-        private string name;
-        private Inventory _inventory = new Inventory();
-
-
-       [JsonProperty]
+        
+        [JsonProperty]
         public Inventory Inventory
         {
             get { return _inventory; }
-            private set { _inventory = value; }
+           private  set { _inventory = value; }
         }
         [JsonProperty]
         public string Job
@@ -75,6 +65,16 @@ namespace TextRpg
         public int DungeonClearCount { get; set; }
 
 
+        private string job;
+        private int _level = 1;
+        private int maxHp = 100;
+        private float _hp;
+        private int _gold = 0;
+        private string name;
+        private Inventory _inventory = new Inventory();
+
+
+
         public Player(PlayerType type)
         {
             _type = type;
@@ -82,6 +82,8 @@ namespace TextRpg
             Inventory.Init(this);
         }
 
+        // 역직렬화 후 인벤토리와 플레이어 객체를 연결하기 위해 사용하는 메서드
+        public void Init() => Inventory.Init(this);
 
         // 플레이어 스탯을 설정하는 메서드
         protected void SetStatus(int attackPower, int defensePower)
@@ -89,7 +91,6 @@ namespace TextRpg
             _attackPower = attackPower;
             _defensePower = defensePower;
         }
-
 
         // 플레이어의 이름을 설정하는 메서드
         public void SetPlayerName(string name)
@@ -126,7 +127,6 @@ namespace TextRpg
 
         }
 
-
         // 장착된 아이템 스탯을 적용하는 메서드
         public void SetItemStat(Item item)
         {
@@ -148,7 +148,6 @@ namespace TextRpg
                     _armorStat = 0;
             }
         }
-
 
         // 플레이어가 골드를 얻는 메서드
         public void GetGold(int price)
@@ -173,7 +172,6 @@ namespace TextRpg
         {
             return (int)(_attackPower + _weaponStat);
         }
-
 
         // 플레이어가 데미지를 입었을 때 호출되는 메서드
         public void Damage(float damageAmount)
@@ -253,6 +251,5 @@ namespace TextRpg
             Job = "Rogue ( 도적 )";
         }
     }
-
 
 }

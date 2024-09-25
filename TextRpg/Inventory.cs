@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,6 @@ namespace TextRpg
 
     internal class Inventory
     {
-        // 인벤토리의 아이템 목록을 저장하는 필드
-        // List<Item>으로 여러 아이템 객체를 저장하고 관리함
         List<Item> items = new List<Item>();
         public List<Item> Item
         {
@@ -27,10 +26,7 @@ namespace TextRpg
             }
 
         }
-
-        //플레이어 데이터를 저장
-        Player _player;
-
+        private Player _player;
         private bool isEquippingItem = false;
         private bool isArmorEquipped = false;
         private bool isWeaponEquipped = false;
@@ -140,7 +136,6 @@ namespace TextRpg
                     }
                 }
             }
-            
         }
 
         //인벤토리를 콘솔창에서 보여주기 위한 메서드.

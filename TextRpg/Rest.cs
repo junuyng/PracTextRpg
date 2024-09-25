@@ -12,7 +12,7 @@ namespace TextRpg
         private int restPrice = 500;
         private Player _player;
         private bool isResting =false;
-
+        private int healAmout = 30;
 
         public void Init(Player player)
         {
@@ -28,7 +28,8 @@ namespace TextRpg
             while (GameManager.Instance.CurrentState == State.Rest && !isResting)
             {
                 Console.Clear();
-                Console.WriteLine($"{restPrice}를 내면 체력을 회복할 수 있습니다. (보유 골드 : {_player.Gold}G)");
+                Console.WriteLine($"{restPrice}골드를 지불해 {healAmout}만큼의 체력을 회복할 수 있습니다. (보유 골드 :{_player.Gold}G)");
+                Console.WriteLine("현재 플레이어 체력 {0}",_player.HP);
                 Console.WriteLine();
                 Console.WriteLine("1. 휴식하기");
                 Console.WriteLine("0. 나가기");
@@ -61,6 +62,10 @@ namespace TextRpg
                 Console.WriteLine("휴식을 취하는 중 입니다! ...{0}", i);
                 Thread.Sleep(1000);
             }
+
+            Console.Clear();
+            Console.WriteLine("회복 후 플레이어 체력 {0}", _player.HP);
+            Thread.Sleep(1000);
 
             isResting = false;
             DisplayRest();

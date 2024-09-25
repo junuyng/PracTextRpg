@@ -85,7 +85,7 @@ namespace TextRpg
                         _player = new Mage();
                         break;
                     case "4":
-                        _player = new Archer();
+                        _player = new Rogue();
                         break;
                     default:
                         _player = new Player(PlayerType.None);
@@ -216,6 +216,7 @@ namespace TextRpg
         {
             string playerJson = JsonConvert.SerializeObject(_player, Formatting.Indented);
             File.WriteAllText("playerData.json", playerJson);
+            
         }
 
         // 기존 데이터를 불러오는 메서드
@@ -225,6 +226,7 @@ namespace TextRpg
             {
                 string playerJson = File.ReadAllText("playerData.json");
                 _player = JsonConvert.DeserializeObject<Player>(playerJson);
+                _player.Init();
             }
 
         }

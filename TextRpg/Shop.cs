@@ -16,7 +16,6 @@ namespace TextRpg
         private Player _player;
         private bool isShopping = false;
 
-
         public void Init(Player player)
         {
 
@@ -51,7 +50,6 @@ namespace TextRpg
             }
         }
 
-
         // 아이템을 구매할 수 있는지 확인하고, 구매가 가능할 경우 처리하는 메서드
         private void CanBuyItem(int itemNum)
         {
@@ -82,7 +80,6 @@ namespace TextRpg
             }
 
         }
-
 
         // 상점에서 아이템을 판매하는 메서드
         private void SellItem()
@@ -134,7 +131,6 @@ namespace TextRpg
             }
         }
 
-
         // 상점에서 아이템을 구매하는 메서드
         private void BuyItem()
         {
@@ -178,7 +174,6 @@ namespace TextRpg
             }
 
         }
-
 
         // 상점에서 판매 중인 아이템 목록을 콘솔창에 출력하는 메서드
         public void DisplayGoods()
