@@ -13,7 +13,7 @@ namespace TextRpg
         private Player _player;
         private bool isResting =false;
 
-    
+
         public void Init(Player player)
         {
             _player = player; 
@@ -22,7 +22,7 @@ namespace TextRpg
 
 
 
-        //콘솔창에서 보여주기 위한 메서드.
+        // 휴식 관련 정보를 콘솔에 출력하는 메서드
         public void DisplayRest()
         {
             while (GameManager.Instance.CurrentState == State.Rest && !isResting)
@@ -49,9 +49,10 @@ namespace TextRpg
             }
         }
 
+        // 휴식을 취하고, 플레이어의 체력을 회복시키는 메서드
         private void TakeRest()
         {
-            _player.SpendGold(restPrice);
+            _player.SpendGold(restPrice); 
             _player.HealHP();
 
             for (int i = 1; i <= 3; i++)

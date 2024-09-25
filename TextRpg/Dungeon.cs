@@ -9,20 +9,18 @@ namespace TextRpg
     internal class Dungeon
     {
         private Player _player;
-
         private int easyRequiredStats;
         private int normalRequiredStats;
         private int hardRequiredStats;
         private int previousPlayerHP;
         private int previousPlayerGold;
-
         private int _easyReward;
         private int _normalReward;
         private int _hardReward;
-
         private bool isInDungeon = false;
 
 
+        // 던전 초기화 메서드: 플레이어 정보와 난이도별 요구 스탯 및 보상 설정
         public void Init(Player player, int easyStats = 5, int normalStats = 11, int hardStats = 17 ,int easyReward= 1000 , int normalReward = 1700 , int hardReward = 2500)
         {
             _player = player;
@@ -36,7 +34,7 @@ namespace TextRpg
         }
 
 
-
+        // 던전 입장 화면을 출력하는 메서드
         public void DisplayEnterDungeon()
         {
             while (GameManager.Instance.CurrentState == State.Dungeon && isInDungeon == false)
@@ -73,6 +71,7 @@ namespace TextRpg
 
         }
 
+        // 던전 결과를 츨력 및 처리하는 메서드
         private void DisplayInDungeon(int dungeonNum)
         {
             bool isClear = CheckDungeonClear(dungeonNum);
@@ -143,7 +142,7 @@ namespace TextRpg
 
         }
 
-
+        // 던전 클리어 여부를 반환 및 클리어 시 로직 수행
         private bool CheckDungeonClear(int dungeonNum)
         {
             int requiredStats;
@@ -171,24 +170,27 @@ namespace TextRpg
                     break;
             }
 
-
+            // 플레이어 방어 스탯이 요구 스탯보다 부족할 경우 실패 확률 존재
             if (playerDefenseStat < requiredStats)
             {
                 int rand = new Random().Next(1, 11);
-                if (0 < rand && rand <= 4)
+                if (0 < rand && rand <= 4)  // 실패 확률 40%
                 {
                     return false;
                 }
             }
 
+            // 던전 클리어 시 플레이어 정보 저장
             previousPlayerHP = (int)_player.HP;
             previousPlayerGold = _player.Gold;
-            
+
+            // 플레이어가 던전에서 입을 데미지 계산
             int damage = new Random().Next(20, 36) - (requiredStats - playerDefenseStat);
             _player.Damage(damage);
 
+            // 추가 보상 계산 (공격력  ~ 공격력 * 2 의 %  )
             double randomValue = 0.1 + (new Random().NextDouble() * 0.1);  // 0.1 ~ 0.2 범위의 난수 생성
-            double extraRewardPercent = Math.Round(playerAttackStat * randomValue,2);  // 공격력의 10% ~ 20% 범위
+            double extraRewardPercent = Math.Round(playerAttackStat * randomValue,2);  //(공격력  ~ 공격력 * 2 의 %  )
             int totalReward = (int)(reward + (reward * extraRewardPercent));  // 최종 보상 계산
             _player.GetGold(totalReward);    
           
@@ -196,6 +198,7 @@ namespace TextRpg
         }
 
 
+        //던전 클리어시 호출 되는 메서드, 플레이어의 던전클리어수를 늘리고 LevelUp 함수 호출 
         private void OnDungeonClear()
         {
             _player.DungeonClearCount++;

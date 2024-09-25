@@ -75,9 +75,7 @@ namespace TextRpg
         public int DungeonClearCount { get; set; }
 
 
-
-
-
+        //플레이어 생성자 오버라이딩
         public Player(PlayerType type)
         {
             _type = type;
@@ -86,9 +84,7 @@ namespace TextRpg
         }
 
 
-
-
-        //플레이어 스탯을 설정하기 위한 함수
+        // 플레이어 스탯을 설정하는 메서드
         protected void SetStatus(int attackPower, int defensePower)
         {
             _attackPower = attackPower;
@@ -96,12 +92,13 @@ namespace TextRpg
         }
 
 
+        // 플레이어의 이름을 설정하는 메서드
         public void SetPlayerName(string name)
         {
             Name = name;
         }
 
-        //플레이어의 스테이터스를 확인하기 위한 함수.
+        // 플레이어 상태를 콘솔에 출력하는 메서드
         public void DisplayPlayerStatus()
         {
             string weaponStatString = _weaponStat > 0 ? $"({_weaponStat})" : "";
@@ -131,7 +128,7 @@ namespace TextRpg
         }
 
 
-        //장착 중인 아이템 능력치를 플레이어에게 적용해주는 메서드 
+        // 장착된 아이템 스탯을 적용하는 메서드
         public void SetItemStat(Item item)
         {
 
@@ -154,33 +151,32 @@ namespace TextRpg
         }
 
 
-
+        // 플레이어가 골드를 얻는 메서드
         public void GetGold(int price)
         {
             Gold += price;
         }
 
-
+        // 플레이어가 골드를 사용하는 메서드
         public void SpendGold(int price)
         {
             Gold -= price;
         }
 
-
-
-
+        // 플레이어 방어력의 총합을 계산하는 메서드 (기본 스탯 + 아이템 스탯)
         public int GetDungeonDefenseStat()
         {
             return (int)(_defensePower + _armorStat);
         }
 
-
+        // 플레이어 공격력의 총합을 계산하는 메서드 (기본 스탯 + 아이템 스탯)
         public int GetDungeonAttackStat()
         {
             return (int)(_attackPower + _weaponStat);
         }
 
 
+        // 플레이어가 데미지를 입었을 때 호출되는 메서드
         public void Damage(float damageAmount)
         {
             HP -= damageAmount;
@@ -189,6 +185,7 @@ namespace TextRpg
                 GameManager.Instance.GameOver();
         }
 
+        // 플레이어가 체력을 회복하는 메서드
         public void HealHP(float healAmount = 30)
         {
             if (HP <= maxHp - healAmount)
@@ -198,6 +195,7 @@ namespace TextRpg
                 HP = maxHp;
         }
 
+        // 플레이어가 레벨업하는 메서드 (조건이 충족되면 레벨업)
         public void LevelUp()
         {
 
@@ -217,7 +215,7 @@ namespace TextRpg
 
     }
 
-
+    //전사 클래스
     class Chad : Player
     {
         public Chad() : base(PlayerType.Chad)
@@ -227,6 +225,7 @@ namespace TextRpg
         }
     }
 
+    //궁수 클래스 
     class Archer : Player
     {
         public Archer() : base(PlayerType.Archer)
@@ -236,6 +235,7 @@ namespace TextRpg
         }
     }
 
+    //법사 클래스
     class Mage : Player
     {
         public Mage() : base(PlayerType.Mage)
@@ -245,6 +245,7 @@ namespace TextRpg
         }
     }
 
+    //도적 클래스 
     class Rogue : Player
     {
         public Rogue() : base(PlayerType.Rogue)

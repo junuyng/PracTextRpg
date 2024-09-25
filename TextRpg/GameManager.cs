@@ -23,18 +23,18 @@ namespace TextRpg
     [System.Serializable]
     public class GameManager
     {
-
         public State CurrentState { get { return currentState; } private set { currentState = value; } }
+
 
         private State currentState;
         private Player _player;
-        private  Shop shop = new Shop();
-        private  Rest rest = new Rest();
+        private Shop shop = new Shop();
+        private Rest rest = new Rest();
         private Dungeon dungeon = new Dungeon();
         private bool isPlay = false;
-        private  bool isPlayFirstTime = true;
+        private bool isPlayFirstTime = true;
         private static GameManager instance;
-       public static GameManager Instance
+        public static GameManager Instance
         {
             get
             {
@@ -47,17 +47,17 @@ namespace TextRpg
 
         }
 
-
+        //게임 시작을 관리하는 함수
         public void GameStart()
         {
-           Console.Clear(); 
-      
+            Console.Clear();
+
 
             isPlay = true;
             Console.WriteLine("스파르타 던전에 오신 여러분 환영 합니다.");
 
-
-            if (!File.Exists("playerData.json"))
+            //세이브 파일이 없다면 
+            if (!IsSaveFileExists())
             {
                 Console.WriteLine("당신의 이름을 입력해주세요.");
                 Console.Write(">>");
@@ -91,14 +91,13 @@ namespace TextRpg
                         _player = new Player(PlayerType.None);
                         break;
                 }
-
                 _player.SetPlayerName(name);
                 isPlayFirstTime = false;
                 SetUpGame();
                 SaveGameData();
             }
 
-
+            //세이브 파일이 있다면
             else
             {
                 LoadData();
@@ -113,6 +112,14 @@ namespace TextRpg
             }
 
         }
+
+        // 세이브 파일 존재 여부를 확인하는 메서드
+        private bool IsSaveFileExists()
+        {
+            return File.Exists("playerData.json");
+        }
+
+        // 게임 오버 처리 메서드, 게임 데이터를 초기화하고 프로그램 종료
         public void GameOver()
         {
             ResetGameData();
@@ -122,6 +129,7 @@ namespace TextRpg
             Environment.Exit(0);
         }
 
+        // 게임 초기값 설정 메서드
         public void SetUpGame()
         {
             shop.Init(_player);
@@ -129,11 +137,11 @@ namespace TextRpg
             dungeon.Init(_player);
         }
 
-        // 플레이어의 행동을 선택하고 그에 따라 게임 상태를 변경하는 메서드
-        private  void SelectBehavior()
+        // 플레이어의 행동을 선택하고 게임 상태를 변경하는 메서드
+        private void SelectBehavior()
         {
             Console.Clear();
-
+            TitleBox("행동 선택");
             Console.WriteLine("1.상태 보기");
             Console.WriteLine("2.인벤토리");
             Console.WriteLine("3.상점");
@@ -175,8 +183,8 @@ namespace TextRpg
             }
         }
 
-
-        public  void SetCurrentState(int stateNum = 0)
+        // 현재 게임 상태를 변경하고 게임 진행 상황을 저장하는 메서드
+        public void SetCurrentState(int stateNum = 0)
         {
             switch (stateNum)
             {
@@ -203,13 +211,14 @@ namespace TextRpg
             SaveGameData();
         }
 
-       
+        // 플레이어 데이터를 저장하는 메서드
         public void SaveGameData()
         {
             string playerJson = JsonConvert.SerializeObject(_player, Formatting.Indented);
             File.WriteAllText("playerData.json", playerJson);
         }
 
+        // 기존 데이터를 불러오는 메서드
         public void LoadData()
         {
             if (File.Exists("playerData.json"))
@@ -217,9 +226,10 @@ namespace TextRpg
                 string playerJson = File.ReadAllText("playerData.json");
                 _player = JsonConvert.DeserializeObject<Player>(playerJson);
             }
-     
+
         }
 
+        // 세이브 파일을 삭제하는 메서드
         public void ResetGameData()
         {
             if (File.Exists("playerData.json"))
@@ -228,7 +238,7 @@ namespace TextRpg
             }
         }
 
-
+        // 콘솔 창에 타이틀을 출력하는 메서드
         public void TitleBox(String title)
         {
             for (int i = 0; i < title.Length; i++)

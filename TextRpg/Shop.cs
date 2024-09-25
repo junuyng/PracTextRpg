@@ -19,10 +19,8 @@ namespace TextRpg
 
         public void Init(Player player)
         {
-            //상점 아이템 중복 방지
-            goods.Clear();
 
-            //상점 아이템 리스트 요소 추가
+            // 상점 아이템 목록 생성
             Item item1 = new Item(ItemType.Armor, "수련자 갑옷", 1000, 5, "수련에 도움을 주는 갑옷입니다.");
             goods.Add(item1);
             Item item2 = new Item(ItemType.Armor, "무쇠갑옷", 2000, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.");
@@ -38,10 +36,10 @@ namespace TextRpg
             Item item7 = new Item(ItemType.Weapon, "날카로운 양날 도끼", 2500, 12, "매우 강력한 무기이지만 속도가 느린 도끼입니다.");
             goods.Add(item7);
 
-            //플레이어 정보 받아오기
+            // 플레이어 정보 초기화
             _player = player;
 
-            
+            // 플레이어가 이미 소유한 아이템을 상점에서 판매할 수 없도록 처리
             foreach (var item in goods)
             {
                 foreach (var i in _player.Inventory.Item)
@@ -54,9 +52,7 @@ namespace TextRpg
         }
 
 
-
-        // 플레이어의 돈과 아이템의 가격을 비교하여, 구매 가능 여부를 판단하고
-        // 구매가 가능할 경우 아이템을 구매하는 메서드
+        // 아이템을 구매할 수 있는지 확인하고, 구매가 가능할 경우 처리하는 메서드
         private void CanBuyItem(int itemNum)
         {
             Console.Clear();
@@ -88,7 +84,7 @@ namespace TextRpg
         }
 
 
-        // 상점에서 플레이어가 아이템을 팔 수 있게 하는 메서드.
+        // 상점에서 아이템을 판매하는 메서드
         private void SellItem()
         {
             while (isShopping)
@@ -139,7 +135,7 @@ namespace TextRpg
         }
 
 
-        // 번호가 달린 아이템 목록을 출력 후 플레이어가 아이템을 선택하고 구매할 수 있게 하기 위한 메서드
+        // 상점에서 아이템을 구매하는 메서드
         private void BuyItem()
         {
 
@@ -184,7 +180,7 @@ namespace TextRpg
         }
 
 
-        //상점에서 판매하는 상품들을 콘솔창에서 보여주기 위한 메서드.
+        // 상점에서 판매 중인 아이템 목록을 콘솔창에 출력하는 메서드
         public void DisplayGoods()
         {
             while (GameManager.Instance.CurrentState == State.Shop && !isShopping)
