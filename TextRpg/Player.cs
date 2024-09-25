@@ -75,7 +75,7 @@ namespace TextRpg
         public int DungeonClearCount { get; set; }
 
 
-        //플레이어 생성자 오버라이딩
+        // 플레이어 생성자 오버로딩
         public Player(PlayerType type)
         {
             _type = type;

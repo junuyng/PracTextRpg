@@ -49,7 +49,7 @@ namespace TextRpg
             }
         }
 
-        // 휴식을 취하고, 플레이어의 체력을 회복시키는 메서드
+        // 휴식을 취하고, 비용을 지불한 플레이어의 체력을 회복시키는 메서드
         private void TakeRest()
         {
             _player.SpendGold(restPrice); 
