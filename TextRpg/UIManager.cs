@@ -13,7 +13,7 @@ namespace TextRpg
         public static UIManager Instance
         {
 
-            get 
+            get
             {
                 if (instance == null)
                 {
@@ -22,57 +22,58 @@ namespace TextRpg
                 return instance;
             }
 
-            private set { instance = value; }   
+            private set { instance = value; }
         }
 
 
-
-
-        // 콘솔 창에 타이틀을 출력하는 메서드
+        //타이틀을 꾸며주는 메서드
         public void TitleBox(String title)
         {
             for (int i = 0; i < title.Length; i++)
             {
                 Console.Write("ㅡ");
             }
+
             Console.WriteLine();
             Console.WriteLine("{0}", title);
+
             for (int i = 0; i < title.Length; i++)
             {
                 Console.Write("ㅡ");
             }
+
             Console.Write("\n\n");
-
-
 
         }
 
+        //텍스트를 가운데로 정렬
         public void AlignTextCenter(string text)
         {
 
-            int CursorX = Console.WindowWidth / 2 - text.Length ;
-            int CursorY = Console.WindowHeight / 2 -1;
+            int CursorX = Console.WindowWidth / 2 - text.Length;
+            int CursorY = Console.WindowHeight / 2 - 1;
 
             Console.SetCursorPosition(CursorX, CursorY);
             Console.WriteLine(text);
         }
 
-
+        //텍스트 배열을 가운데로 정렬
         public void AlignTextCenter(string[] text)
         {
             int padding = 3;
+
             for (int i = 0; i < text.Length; i++)
             {
                 int CursorX = (Console.WindowWidth / 2) - (text[i].Length / 2);
                 int CursorY = (Console.WindowHeight / 2) - i - padding;
                 Console.SetCursorPosition(CursorX, CursorY);
-              
+
                 Console.WriteLine(text[i]);
             }
 
         }
 
-
+        //입력 UI를 제공, 입력된 값 반환
         public int DisplayInputUI()
         {
             int cursorPosY = (int)(Console.WindowHeight * 0.7);
@@ -80,25 +81,23 @@ namespace TextRpg
 
             Console.SetCursorPosition(1, cursorPosY);
             for (int i = 0; i < Console.WindowWidth - 1; i++)
-                {
-                    Console.Write("-");
-                }
+            {
+                Console.Write("-");
+            }
 
-                Console.Write(">>");
+            Console.Write(">>");
 
             bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
-
-
-                return selectNum;
+            return selectNum;
         }
 
-        // 4개의 선택지 UI
+        //선택지 UI를 제공, 선택된 값 반환
         public int DisplaySelectionUI(string[] options)
         {
 
-            int selectNum =0;
+            int selectNum = 0;
             int cursorPosY = (int)(Console.WindowHeight * 0.7);
-            int selectCursorPosY = cursorPosY+1;
+            int selectCursorPosY = cursorPosY + 1;
             int previousCursorPosY = selectCursorPosY; // 이전 커서 위치 저장
             bool isSelecting = true;
 
@@ -133,9 +132,9 @@ namespace TextRpg
 
 
                 //콘솔 좌표 설정
-                if (selectCursorPosY < cursorPosY +1)
+                if (selectCursorPosY < cursorPosY + 1)
                     selectCursorPosY = cursorPosY + options.Length;
-                else if(selectCursorPosY > cursorPosY + options.Length)
+                else if (selectCursorPosY > cursorPosY + options.Length)
                     selectCursorPosY = cursorPosY + 1;
 
                 // 새 위치에 '▶' 출력
@@ -148,22 +147,21 @@ namespace TextRpg
                 {
                     case ConsoleKey.UpArrow:
                     case ConsoleKey.LeftArrow:
-                        previousCursorPosY = selectCursorPosY;  
+                        previousCursorPosY = selectCursorPosY;
                         selectCursorPosY--;
                         break;
-                    case ConsoleKey.RightArrow:                 
+                    case ConsoleKey.RightArrow:
                     case ConsoleKey.DownArrow:
                         previousCursorPosY = selectCursorPosY;
                         selectCursorPosY++;
                         break;
                     case ConsoleKey.Enter:
                         selectNum = selectCursorPosY - cursorPosY;
-                        isSelecting=false;
+                        isSelecting = false;
                         break;
                 }
 
             }
-
 
             return selectNum;
 
