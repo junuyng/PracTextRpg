@@ -74,7 +74,6 @@ namespace TextRpg
         private Inventory _inventory = new Inventory();
 
 
-
         public Player(PlayerType type)
         {
             _type = type;
@@ -107,7 +106,7 @@ namespace TextRpg
             while (GameManager.Instance.CurrentState == State.ViewStatus)
             {
                 Console.Clear();
-                GameManager.Instance.TitleBox("플레이어 상태보기");
+                UIManager.Instance.TitleBox("플레이어 상태보기");
                 Console.WriteLine("Lv.{0}", _level);
                 Console.WriteLine("{0}", job);
                 Console.WriteLine("공격력: {0}{1}", _attackPower, weaponStatString);
@@ -115,13 +114,12 @@ namespace TextRpg
                 Console.WriteLine("체력: {0} / {1}", HP, maxHp);
                 Console.WriteLine("Gold: {0} G", _gold);
                 Console.WriteLine();
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
-                int num = int.Parse(Console.ReadLine());
 
-                if (num == 0)
+
+                string[] options = { "나가기" };
+                int num = UIManager.Instance.DisplaySelectionUI(options);
+
+                if (num == 1)
                     GameManager.Instance.SetCurrentState();
             }
 
@@ -206,10 +204,6 @@ namespace TextRpg
 
         }
 
-
-
-
-
     }
 
     //전사 클래스
@@ -250,6 +244,7 @@ namespace TextRpg
             SetStatus(9, 3);
             Job = "Rogue ( 도적 )";
         }
+
     }
 
 }

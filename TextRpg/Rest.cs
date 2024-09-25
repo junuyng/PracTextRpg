@@ -28,46 +28,61 @@ namespace TextRpg
             while (GameManager.Instance.CurrentState == State.Rest && !isResting)
             {
                 Console.Clear();
-                Console.WriteLine($"{restPrice}골드를 지불해 {healAmout}만큼의 체력을 회복할 수 있습니다. (보유 골드 :{_player.Gold}G)");
-                Console.WriteLine("현재 플레이어 체력 {0}",_player.HP);
+
+                string[] text = { $"{restPrice}골드를 지불해 {healAmout}만큼의 체력을 회복할 수 있습니다. (보유 골드 :{_player.Gold}G)", $"현재 플레이어 체력 {_player.HP}" };
+                UIManager.Instance.AlignTextCenter(text);
                 Console.WriteLine();
-                Console.WriteLine("1. 휴식하기");
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
-              
-                bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
-                if (isValid && selectNum == 0)
+
+
+                string[] options = { "휴식하기","나가기" };
+                int selectNum = UIManager.Instance.DisplaySelectionUI(options);
+
+
+                switch (selectNum)
                 {
-                    GameManager.Instance.SetCurrentState();
+                    case 1:
+                        isResting = true;
+                        TakeRest();
+                        break;
+                    case 2:
+                        GameManager.Instance.SetCurrentState();
+                        break;
+                
                 }
-                else if (isValid && selectNum == 1)
-                {
-                    isResting = true;
-                    TakeRest();
-                }
+
             }
         }
 
         // 휴식을 취하고, 비용을 지불한 플레이어의 체력을 회복시키는 메서드
         private void TakeRest()
         {
-            _player.SpendGold(restPrice); 
-            _player.HealHP();
+            isResting = false;
 
-            for (int i = 1; i <= 3; i++)
+            if (_player.Gold < restPrice)
             {
                 Console.Clear();
-                Console.WriteLine("휴식을 취하는 중 입니다! ...{0}", i);
+                UIManager.Instance.AlignTextCenter($"소지금이 부족합니다.");
                 Thread.Sleep(1000);
             }
 
-            Console.Clear();
-            Console.WriteLine("회복 후 플레이어 체력 {0}", _player.HP);
-            Thread.Sleep(1000);
+            else
+            {
+                _player.SpendGold(restPrice);
+                _player.HealHP();
 
-            isResting = false;
+                for (int i = 1; i <= 3; i++)
+                {
+                    Console.Clear();
+                    UIManager.Instance.AlignTextCenter($"휴식을 취하는 중 입니다!...{i}");
+                    Thread.Sleep(1000);
+                }
+
+                Console.Clear();
+                UIManager.Instance.AlignTextCenter($"회복 후 플레이어 체력: {_player.HP}");
+                Thread.Sleep(1000);
+
+            }
+
             DisplayRest();
         }
 

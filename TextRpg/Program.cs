@@ -8,6 +8,8 @@ namespace TextRpg
         static void Main(string[] args)
         {
 
+            
+
             Console.WriteLine("####################################");
             Console.WriteLine("#                                  #");
             Console.WriteLine("#         SPARTA DUNGEON           #");
@@ -15,28 +17,18 @@ namespace TextRpg
             Console.WriteLine("####################################");
 
             Thread.Sleep(1000);
-            Console.Clear();
 
             while (true)
             {
-                Console.WriteLine("####################################");
-                Console.WriteLine("#                                  #");
-                Console.WriteLine("#         SPARTA DUNGEON           #");
-                Console.WriteLine("#                                  #");
-                Console.WriteLine("####################################");
-
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
+              
 
                 if (File.Exists("playerData.json"))
                 {
-                    Console.WriteLine(" 1. 이어하기 , 2. 새 게임 , 3. 종료 ");
-                    Console.Write(">>");
-                    bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
 
-                    if (isValid && 1<= selectNum && selectNum <= 3)
-                    {
+                    string[] options = { "이어하기", "새게임", "종료" };
+                   int selectNum= UIManager.Instance.DisplaySelectionUI(options);
+
+                   
                         switch (selectNum)
                         {
                             case 1:
@@ -52,40 +44,25 @@ namespace TextRpg
                         }
 
 
-                        break;
-
-                    }
-
-                    else
-                    {
-                        Console.WriteLine("잘못된 입력입니다.");
-                        Thread.Sleep(500);
-                    }
+                     
 
                 }
 
                 else
                 {
-                    Console.WriteLine("1. 시작하기 2. 종료");
-                    Console.Write(">>");
-                    bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
+                    string[] options = { "시작하기", "종료" };
 
-                    if (isValid && selectNum == 1)
+                    int selectNum = UIManager.Instance.DisplaySelectionUI(options);
+
+                    if (selectNum == 1)
                     {
                         GameManager.Instance.GameStart();
                         break;
                     }
-                    else if (isValid && selectNum == 2)
+                    else if (selectNum == 2)
                     {
                         Environment.Exit(0);
                     }
-
-                    else
-                    {
-                        Console.WriteLine("잘못된 입력입니다.");
-                        Thread.Sleep(500);
-                    }
-
 
                 }
             }

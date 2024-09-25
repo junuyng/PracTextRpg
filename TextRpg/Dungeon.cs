@@ -40,31 +40,21 @@ namespace TextRpg
             while (GameManager.Instance.CurrentState == State.Dungeon && isInDungeon == false)
             {
                 Console.Clear();
-                GameManager.Instance.TitleBox("던전입장");
 
-                Console.WriteLine("1. 쉬운 던전     | 방어력 {0} 이상 권장", easyRequiredStats);
-                Console.WriteLine("2. 일반 던전     | 방어력 {0}  이상 권장", normalRequiredStats);
-                Console.WriteLine("3. 어려운 던전    | 방어력 {0}  이상 권장", hardRequiredStats);
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
+                UIManager.Instance.TitleBox("던전");
+                string[] options = { $"쉬운 던전     | 방어력 {easyRequiredStats} 이상 권장", $"일반 던전     | 방어력 {normalRequiredStats} 이상 권장", $"어려운 던전     | 방어력 {hardRequiredStats} 이상 권장" ,"나가기"};          
+                int selectNum = UIManager.Instance.DisplaySelectionUI(options);
 
-                bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
-                if (isValid && selectNum == 0)
+                switch (selectNum)
                 {
-                    GameManager.Instance.SetCurrentState();
-                }
-                
-                else if (isValid && 0 < selectNum && selectNum < 4)
-                {
-                    DisplayInDungeon(selectNum);
-                }
-               
-                else
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Thread.Sleep(500);
+                    case 1:
+                    case 2:
+                    case 3:
+                        DisplayInDungeon(selectNum);
+                        break;
+                    case 4:
+                        GameManager.Instance.SetCurrentState();
+                        break;
                 }
 
             }
@@ -103,7 +93,7 @@ namespace TextRpg
                     OnDungeonClear();
 
                     Console.Clear();
-                    GameManager.Instance.TitleBox("던전 클리어");
+                    UIManager.Instance.TitleBox("던전 클리어");
                     Console.WriteLine("축하합니다!");
                     Console.WriteLine($"{dungeonName}을 클리어 하였습니다.");
                     Console.WriteLine();
@@ -111,21 +101,15 @@ namespace TextRpg
                     Console.WriteLine($"체력 {previousPlayerHP} -> {_player.HP}");
                     Console.WriteLine($"Gold {previousPlayerGold} -> {_player.Gold}");
                     Console.WriteLine();
-                    Console.WriteLine("0.나가기");
-                    Console.WriteLine("원하시는 행동을 입력해주세요.");
-                    Console.Write(">>");
-                   
-                    bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
-                    if (isValid && selectNum == 0)
+
+                    string[] option = { "나가기" };
+
+                    int selectNum = UIManager.Instance.DisplaySelectionUI(option);
+
+                    if (selectNum == 1)
                     {
                         isInDungeon = false;
                         DisplayEnterDungeon();
-                    }
-
-                    else
-                    {
-                        Console.WriteLine("잘못된 입력입니다.");
-                        Thread.Sleep(500);
                     }
 
                 }

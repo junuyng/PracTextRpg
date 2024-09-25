@@ -60,18 +60,18 @@ namespace TextRpg
 
             if (item.IsSold == true)
             {
-                Console.WriteLine("이미 판매된 상품 입니다.");
+                UIManager.Instance.AlignTextCenter("이미 판매된 상품 입니다.");
                 Thread.Sleep(500);
             }
 
             else if (_player.Gold < itemPrice)
             {
-                Console.WriteLine("Gold 가 부족합니다.");
+                UIManager.Instance.AlignTextCenter("소지금이 부족합니다.");
             }
             
             else
             {
-                Console.WriteLine("구매를 완료했습니다.");
+                UIManager.Instance.AlignTextCenter("구매를 완료했습니다.");
                 Thread.Sleep(500);
 
                 item.IsSold = true;
@@ -87,9 +87,9 @@ namespace TextRpg
             while (isShopping)
             {
                 Console.Clear();
-                GameManager.Instance.TitleBox("상점 - 아이템 판매");
+                UIManager.Instance.TitleBox("상점 - 아이템 판매");
                 Console.ResetColor();
-                Console.WriteLine("[보유 골드] [{0}]", _player.Gold);
+                Console.WriteLine("[보유 골드:{0}$]", _player.Gold);
 
                 // 플레이어가 보유중인 아이템 목록을 출력
                 List<Item> inventoryItems = _player.Inventory.Item;
@@ -100,19 +100,20 @@ namespace TextRpg
                     Console.WriteLine();
                 }
 
-                Console.WriteLine();
+                int CursorPosY = Console.WindowHeight - 10;
+                Console.SetCursorPosition(0, CursorPosY);
                 Console.WriteLine("0. 나가기");
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
 
-                bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
-                if (isValid && selectNum == 0)
+
+                int selectNum = UIManager.Instance.DisplayInputUI();
+             
+                if (selectNum == 0)
                 {
                     isShopping = false;
                     GameManager.Instance.SetCurrentState(3); 
                 }
 
-                else if (isValid && 0 < selectNum && selectNum < inventoryItems.Count + 1)
+                else if ( 0 < selectNum && selectNum < inventoryItems.Count + 1)
                 {
                     int deleteItemNum = selectNum - 1; // 선택된 아이템의 인덱스
 
@@ -138,8 +139,8 @@ namespace TextRpg
             while (isShopping)
             {
                 Console.Clear();
-                GameManager.Instance.TitleBox("상점 - 아이템 구매");
-                Console.WriteLine("[보유 골드] [{0}]", _player.Gold);
+                UIManager.Instance.TitleBox("상점 - 아이템 구매");
+                Console.WriteLine("[보유 골드:{0}$]", _player.Gold);
 
                 int itemNum = 1;
                 foreach (Item goods in goods)
@@ -148,18 +149,17 @@ namespace TextRpg
                     Console.WriteLine();
                 }
 
-                Console.WriteLine();
+                int CursorPosY = Console.WindowHeight - 10;
+                Console.SetCursorPosition(0, CursorPosY);
                 Console.WriteLine("0. 나가기");
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
 
-                bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
-                if (isValid && selectNum == 0)
+                int selectNum =UIManager.Instance.DisplayInputUI();
+                if (selectNum == 0)
                 {
                     isShopping = false;
                     GameManager.Instance.SetCurrentState(3);
                 }
-                else if (isValid && 0 < selectNum && selectNum < goods.Count + 1)
+                else if ( 0 < selectNum && selectNum < goods.Count + 1)
                 {
                     Console.Clear();
                     CanBuyItem(selectNum);
@@ -181,9 +181,10 @@ namespace TextRpg
             while (GameManager.Instance.CurrentState == State.Shop && !isShopping)
             {
                 Console.Clear();
-                GameManager.Instance.TitleBox("상점 - 아이템 목록");
-                Console.WriteLine("[보유 골드] [{0}]", _player.Gold);
+                UIManager.Instance.TitleBox("상점 - 아이템 목록");
+                Console.WriteLine("[보유 골드:{0}$]", _player.Gold);
 
+                //아이템 목록 출력 
                 int itemNum = 1;
                 foreach (Item goods in goods)
                 {
@@ -191,35 +192,27 @@ namespace TextRpg
                     Console.WriteLine();
                 }
 
-                Console.WriteLine();
-                Console.WriteLine("1. 아이템 구매");
-                Console.WriteLine("2. 아이템 판매");
-                Console.WriteLine("0. 나가기");
 
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
-                bool isValid = int.TryParse(Console.ReadLine(), out int selectNum);
+                string title = $"상점 - 아이템 목록\n[보유 골드] [{_player.Gold}]";
+                string[] options = { "아이템 구매", "아이템 판매", "나가기" };
+                int selectNum = UIManager.Instance.DisplaySelectionUI(options);
 
-
-                if (isValid && selectNum == 0)
-                    GameManager.Instance.SetCurrentState();
-
-                else if (isValid && 0 < selectNum && selectNum < 3)
+                switch (selectNum)
                 {
-                    isShopping = true;
-
-                    if (selectNum == 1)
+                    case 1:
+                        isShopping = true;
                         BuyItem();
-
-                    else if (selectNum == 2)
+                        break;
+                        case 2:
+                        isShopping = true;
                         SellItem();
+                        break;
+                        case 3:
+                        GameManager.Instance.SetCurrentState();
+                        break;
                 }
 
-                else
-                {
-                    Console.Write("잘못된 입력입니다");
-                    Thread.Sleep(500);
-                }
+               
 
             }
         }

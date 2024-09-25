@@ -13,7 +13,9 @@ namespace TextRpg
     internal class Inventory
     {
         List<Item> items = new List<Item>();
-        public List<Item> Item
+
+
+    public List<Item> Item
         {
             get
             {
@@ -56,20 +58,21 @@ namespace TextRpg
                     item.WriteItemInfo(itemNum++, 1);
                     Console.WriteLine();
                 }
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
-               
 
-                bool isValid = int.TryParse(Console.ReadLine(), out int num);
-                if (isValid && num == 0)
+                int CursorPosY = Console.WindowHeight  - 10;
+
+                Console.SetCursorPosition(0, CursorPosY);
+                Console.WriteLine("0. 나가기");
+
+
+                int num = UIManager.Instance.DisplayInputUI();
+                if ( num == 0)
                 {
                     isEquippingItem = false;
                     GameManager.Instance.SetCurrentState(2);
                 }
 
-                else if (isValid && 1 <= num && num < items.Count + 1)
+                else if ( 1 <= num && num < items.Count + 1)
                 {
                     Item item = items[num - 1];
 
@@ -146,7 +149,7 @@ namespace TextRpg
                 int itemNum = 1;
 
                 Console.Clear();
-                GameManager.Instance.TitleBox("인벤토리");
+                UIManager.Instance.TitleBox("인벤토리");
                 Console.WriteLine("[아이템 목록]");
 
 
@@ -156,23 +159,23 @@ namespace TextRpg
                     Console.WriteLine();
                 }
 
-                Console.WriteLine();
-                Console.WriteLine("1. 장착관리");
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
-                int num = int.Parse(Console.ReadLine());
+
+                string[] options = { "장착관리" , "나가기"};
 
 
-                if (num == 0)
-                    GameManager.Instance.SetCurrentState();
+                int num = UIManager.Instance.DisplaySelectionUI(options);
 
-                else if (num == 1)
+                switch (num)
                 {
-                    isEquippingItem = true;
-                    EquipItem();
+                    case 1:
+                        isEquippingItem = true;
+                        EquipItem();
+                        break;
+                    case 2:
+                        GameManager.Instance.SetCurrentState();
+                         break;
                 }
+
             }
         }
 

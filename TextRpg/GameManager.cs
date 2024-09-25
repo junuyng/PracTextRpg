@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -31,8 +32,6 @@ namespace TextRpg
         private Shop shop = new Shop();
         private Rest rest = new Rest();
         private Dungeon dungeon = new Dungeon();
-        private bool isPlay = false;
-        private bool isPlayFirstTime = true;
         private static GameManager instance;
         public static GameManager Instance
         {
@@ -53,8 +52,8 @@ namespace TextRpg
             Console.Clear();
 
 
-            isPlay = true;
             Console.WriteLine("스파르타 던전에 오신 여러분 환영 합니다.");
+            Console.Clear();
 
             //세이브 파일이 없다면 
             if (!IsSaveFileExists())
@@ -64,35 +63,39 @@ namespace TextRpg
                 string name = Console.ReadLine();
 
                 Console.Clear();
-                Console.WriteLine("당신의 이름은 {0} 이군요.", name);
-                Thread.Sleep(500);
+                UIManager.Instance.AlignTextCenter($"당신의 이름은 {name} 이군요.");
+                Thread.Sleep(2000);
 
                 Console.Clear();
                 Console.WriteLine("당신의 직업을 선택해주세요.");
-                Console.WriteLine("1. 전사 , 2.궁수 , 3.마법사, 4.도적");
-                Console.Write(">>");
-                string str = Console.ReadLine();
 
-                switch (str)
+                string[] options = { "전사", "궁수", "마법사", "도적" };
+         
+                int selectNum = UIManager.Instance.DisplaySelectionUI(options);
+                switch (selectNum)
                 {
-                    case "1":
+                    case 1:
                         _player = new Chad();
                         break;
-                    case "2":
+                    case 2:
                         _player = new Archer();
                         break;
-                    case "3":
+                    case 3:
                         _player = new Mage();
                         break;
-                    case "4":
+                    case 4:
                         _player = new Rogue();
                         break;
-                    default:
-                        _player = new Player(PlayerType.None);
-                        break;
+                 
                 }
+
+                Console.Clear();
+
+                string[] text = { $"앞으로 당신은 {_player.Job}로서 새로운 여정을 시작하게 됩니다.", "당신의 앞길에 행운이 가득하길 진심으로 기원합니다." };
+                UIManager.Instance.AlignTextCenter(text);
+                Thread.Sleep(2000);
+
                 _player.SetPlayerName(name);
-                isPlayFirstTime = false;
                 SetUpGame();
                 SaveGameData();
             }
@@ -105,10 +108,10 @@ namespace TextRpg
             }
 
 
-            while (isPlay)
+            while (true)
             {
                 if (currentState == State.SelectChoice)
-                    SelectBehavior();
+                        SelectBehavior();
             }
 
         }
@@ -124,7 +127,7 @@ namespace TextRpg
         {
             ResetGameData();
             Console.Clear();
-            TitleBox("플레이어가 사망했습니다.");
+            UIManager.Instance.TitleBox("플레이어가 사망했습니다.");
             Thread.Sleep(1000);
             Environment.Exit(0);
         }
@@ -141,51 +144,48 @@ namespace TextRpg
         private void SelectBehavior()
         {
             Console.Clear();
-            TitleBox("행동 선택");
-            Console.WriteLine("1.상태 보기");
-            Console.WriteLine("2.인벤토리");
-            Console.WriteLine("3.상점");
-            Console.WriteLine("4.던전입장");
-            Console.WriteLine("5.휴식하기");
-            Console.WriteLine("0.종료\n");
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-            Console.Write(">>");
-            string choice = Console.ReadLine();
+            UIManager.Instance.TitleBox("메인화면");
+            string[] selectArray = { "상태 보기", "인벤토리", "상점", "던전입장", "휴식하기", "종료" };
+            int choice = UIManager.Instance.DisplaySelectionUI(selectArray);
 
             switch (choice)
             {
-                case "0":
-                    Console.Clear();
-                    Console.WriteLine("게임을 종료합니다.");
-                    Thread.Sleep(500);
-                    isPlay = false;
-                    break;
-                case "1":
+            
+                case 1:
                     SetCurrentState(1);
                     _player.DisplayPlayerStatus();
                     break;
-                case "2":
+                case 2:
                     SetCurrentState(2);
                     _player.Inventory.DisplayInventory();
                     break;
-                case "3":
+                case 3:
                     SetCurrentState(3);
                     shop.DisplayGoods();
                     break;
-                case "4":
+                case 4:
                     SetCurrentState(4);
                     dungeon.DisplayEnterDungeon();
                     break;
-                case "5":
+                case 5:
                     SetCurrentState(5);
                     rest.DisplayRest();
                     break;
+                case 6:
+                    Console.Clear();
+                    Console.WriteLine("게임을 종료합니다.");
+                    Thread.Sleep(500);
+                    Environment.Exit(0);
+                    break;
             }
+
         }
 
         // 현재 게임 상태를 변경하고 게임 진행 상황을 저장하는 메서드
         public void SetCurrentState(int stateNum = 0)
         {
+            Console.Clear();
+
             switch (stateNum)
             {
                 case 1:
@@ -240,24 +240,10 @@ namespace TextRpg
             }
         }
 
-        // 콘솔 창에 타이틀을 출력하는 메서드
-        public void TitleBox(String title)
-        {
-            for (int i = 0; i < title.Length; i++)
-            {
-                Console.Write("ㅡ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("{0}", title);
-            for (int i = 0; i < title.Length; i++)
-            {
-                Console.Write("ㅡ");
-            }
-            Console.Write("\n\n");
+        
 
 
 
-        }
 
     }
 
